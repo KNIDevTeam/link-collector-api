@@ -27,7 +27,22 @@ namespace WebApi.services.LinkService
 
             try
             {
+                if (newLink.Url == null || newLink.Description == null)
+                {
+                    response.Success = false;
+                    response.Message = "Url and description cannot be null";
+                    return response;
+                }
+
+                if (await _context.Links.FirstOrDefaultAsync(l => l.Url.Equals(newLink.Url)) != null)
+                {
+                    response.Success = false;
+                    response.Message = "Specified url exists in links database";
+                    return response;
+                }
+
                 Link link = _mapper.Map<Link>(newLink);
+                link.CreatedAt = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
                 await _context.Links.AddAsync(link);
                 await _context.SaveChangesAsync();
                 response.Data = true;

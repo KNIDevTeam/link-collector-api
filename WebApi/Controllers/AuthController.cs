@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(ProvidedTokenDto providedToken)
+        public async Task<IActionResult> Login([FromQuery] ProvidedTokenDto providedToken)
         {
             ServiceResponse<string> response = await _authRepository.Login(providedToken);
 
