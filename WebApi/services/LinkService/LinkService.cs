@@ -14,6 +14,10 @@ namespace WebApi.services.LinkService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly List<int> _possibleCategories = new List<int>
+        {
+            1, 2, 3, 4, 5, 6
+        };
 
         public LinkService(DataContext context, IMapper mapper)
         {
@@ -41,6 +45,13 @@ namespace WebApi.services.LinkService
                     return response;
                 }
 
+                if (!_possibleCategories.Contains(newLink.CategoryId))
+                {
+                    response.Success = false;
+                    response.Message = "Invalid CategoryId";
+                    return response;
+                }
+                
                 Link link = _mapper.Map<Link>(newLink);
                 link.CreatedAt = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
                 await _context.Links.AddAsync(link);
